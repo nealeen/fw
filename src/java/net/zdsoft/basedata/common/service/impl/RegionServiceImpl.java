@@ -5,9 +5,9 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import net.zdsoft.basedata.common.service.RegionService;
-import net.zdsoft.basedata.dao.BaseJapRepositoryDao;
 import net.zdsoft.basedata.dao.RegionDao;
 import net.zdsoft.basedata.entity.Region;
+import net.zdsoft.framework.dao.BaseJapRepositoryDao;
 
 import org.springframework.stereotype.Service;
 
@@ -24,7 +24,7 @@ public class RegionServiceImpl extends BaseServiceImpl<Region, String> implement
 
 	@Override
 	protected BaseJapRepositoryDao<Region, String> getBaseJapRepositoryDao() {
-		return regionDao;
+		return null;
 	}
 
 	@Override

@@ -195,7 +195,7 @@ public class McodeSetting {
 			String p = StringUtils.substringBetween(vsql, "{", "}");
 			vsql = StringUtils.replace(vsql, "{" + p + "}", "?");
 			Object o = obj.get(p);
-			params.add(o == null ? "" : o);
+			params.add(o == null ? "0" : o);
 		}
 
 		List<String[]> os = mcodeDetailService.findBySql(vsql, params.toArray(new Object[0]));

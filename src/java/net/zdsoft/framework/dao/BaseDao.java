@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.zdsoft.framework.enums.CacheEntityKey;
 import net.zdsoft.framework.utils.MapRowMapper;
 import net.zdsoft.framework.utils.MultiRowMapper;
 import net.zdsoft.framework.utils.RedisInterface;

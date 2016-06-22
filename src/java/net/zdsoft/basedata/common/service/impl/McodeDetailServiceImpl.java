@@ -8,9 +8,9 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import net.zdsoft.basedata.common.service.McodeDetailService;
-import net.zdsoft.basedata.dao.BaseJapRepositoryDao;
 import net.zdsoft.basedata.dao.McodeDetailDao;
 import net.zdsoft.basedata.entity.McodeDetail;
+import net.zdsoft.framework.dao.BaseJapRepositoryDao;
 import net.zdsoft.framework.utils.RedisInterface;
 import net.zdsoft.framework.utils.RedisUtils;
 

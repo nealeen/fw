@@ -4,7 +4,9 @@ import java.util.List;
 
 import net.zdsoft.basedata.entity.Region;
 
-public interface RegionDao extends BaseJapRepositoryDao<Region, String> {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface RegionDao extends JpaRepository<Region, String> {
 
 	public List<Region> findByType(String type);
 

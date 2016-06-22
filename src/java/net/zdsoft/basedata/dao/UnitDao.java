@@ -3,8 +3,10 @@ package net.zdsoft.basedata.dao;
 import java.util.List;
 
 import net.zdsoft.basedata.entity.Unit;
+import net.zdsoft.framework.dao.BaseJapRepositoryDao;
 import net.zdsoft.framework.utils.Pagination;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 public interface UnitDao extends BaseJapRepositoryDao<Unit, String> {

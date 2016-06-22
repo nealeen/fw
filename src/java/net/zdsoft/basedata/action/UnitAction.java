@@ -67,7 +67,7 @@ public class UnitAction extends BaseAction {
         if (CollectionUtils.isNotEmpty(depts)) {
             throw new RuntimeException("此单位存在部门信息，不能删除，请先删除部门数据！");
         }
-        unitService.removeOne(id);
+        unitService.delete(id);
         return "删除成功！";
     }
 

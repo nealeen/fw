@@ -15,6 +15,7 @@ import net.zdsoft.basedata.common.service.UnitService;
 import net.zdsoft.basedata.common.service.UserService;
 import net.zdsoft.basedata.dto.DeptDto;
 import net.zdsoft.basedata.entity.Dept;
+import net.zdsoft.basedata.entity.Unit;
 import net.zdsoft.basedata.entity.User;
 import net.zdsoft.framework.action.BaseAction;
 import net.zdsoft.framework.annotation.ControllerInfo;
@@ -24,6 +25,7 @@ import net.zdsoft.framework.entity.LoginInfo;
 import net.zdsoft.framework.utils.ToolUtils;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -70,11 +72,14 @@ public class DeptAction extends BaseAction {
 	@ControllerInfo("删除部门")
 	public String doDelete(ModelMap map, HttpServletRequest request, HttpServletResponse response, @PathVariable String id) {
 
+		List<Dept> depts = deptService.findByParentId(id);
+		if(CollectionUtils.isNotEmpty(depts))
+			return returnError("此部门存在下级部门，不能删除！");
 		List<User> users = userService.findByDeptId(id);
 		if (CollectionUtils.isNotEmpty(users)) {
-			throw new RuntimeException("此部门下存在用户信息，不能删除！");
+			return returnError("此部门下存在用户信息，不能删除！");
 		}
-		deptService.removeOne(id);
+		deptService.delete(id);
 		return returnSuccess();
 	}
 
@@ -85,9 +90,24 @@ public class DeptAction extends BaseAction {
 			HttpSession sesion) {
 		List<Dept> depts = deptService.findByUnitId(unitId);
 		JSONArray array = new JSONArray();
+		Unit unit = unitService.findOne(unitId);
+		if(unit != null){
+			Json json = new Json();
+			json.putEx("id", unit.getId()).putEx("pId", "").putEx("name", unit.getUnitName()).putEx("type", "unit");
+			json.put("title", unit.getUnitName());
+			json.put("open", true);
+			array.add(json);
+		}
 		for (Dept dept : depts) {
 			Json json = new Json();
-			json.putEx("id", dept.getId()).putEx("pid", dept.getParentId()).putEx("name", dept.getDeptName())
+			if(StringUtils.equals(Constant.GUID_ZERO, dept.getParentId())){
+				json.put("pId", unitId);
+			}
+			else{
+				json.put("pId", dept.getParentId());
+			}
+			json.put("type", "dept");
+			json.putEx("id", dept.getId()).putEx("name", dept.getDeptName())
 					.putEx("title", dept.getDeptName());
 			array.add(json);
 		}
@@ -122,7 +142,8 @@ public class DeptAction extends BaseAction {
 			ToolUtils.copyProperties(dept, deptOri, true);
 			deptService.save(deptOri);
 		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
+			e.printStackTrace();
+			return returnError("", "保存部门失败，请联系管理员！", e.getMessage());
 		}
 		return returnSuccess();
 	}
@@ -139,7 +160,7 @@ public class DeptAction extends BaseAction {
 			log.info(Json.toJSONString(dept));
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException(e.getMessage());
+			return returnError("", "保存部门失败，请联系管理员！", e.getMessage());
 		}
 		return returnSuccess();
 	}
@@ -151,7 +172,8 @@ public class DeptAction extends BaseAction {
 		DeptDto dto = new DeptDto();
 		dto.setDept(dept);
 		map.put("dto", dto);
-		map.put("fields", ToolUtils.getEntityFiledNames(Dept.class));
+		List<String> fields = ToolUtils.getEntityFiledNames(Dept.class);
+		map.put("fields", fields);
 		Map<String, Map<String, Object>> columnInfo = ToolUtils.getColumnInfos(Dept.class);
 		map.put("columnInfo", columnInfo);
 		return "/basedata/dept/deptDetail.ftl";

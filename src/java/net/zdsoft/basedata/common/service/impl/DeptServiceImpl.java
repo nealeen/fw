@@ -8,9 +8,9 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import net.zdsoft.basedata.common.service.DeptService;
-import net.zdsoft.basedata.dao.BaseJapRepositoryDao;
 import net.zdsoft.basedata.dao.DeptDao;
 import net.zdsoft.basedata.entity.Dept;
+import net.zdsoft.framework.dao.BaseJapRepositoryDao;
 import net.zdsoft.framework.utils.Pagination;
 import net.zdsoft.framework.utils.RedisInterface;
 import net.zdsoft.framework.utils.RedisUtils;

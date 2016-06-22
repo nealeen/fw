@@ -8,10 +8,10 @@ import javax.annotation.Resource;
 
 import net.zdsoft.basedata.common.service.TeacherService;
 import net.zdsoft.basedata.common.service.UserService;
-import net.zdsoft.basedata.dao.BaseJapRepositoryDao;
 import net.zdsoft.basedata.dao.TeacherDao;
 import net.zdsoft.basedata.entity.Teacher;
 import net.zdsoft.basedata.entity.User;
+import net.zdsoft.framework.dao.BaseJapRepositoryDao;
 import net.zdsoft.framework.utils.Pagination;
 import net.zdsoft.framework.utils.RedisInterface;
 import net.zdsoft.framework.utils.RedisUtils;

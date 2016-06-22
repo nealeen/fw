@@ -1,4 +1,4 @@
-package net.zdsoft.basedata.dao;
+package net.zdsoft.framework.dao;
 
 import java.io.Serializable;
 

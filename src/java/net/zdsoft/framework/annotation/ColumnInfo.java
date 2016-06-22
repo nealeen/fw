@@ -24,6 +24,7 @@ public @interface ColumnInfo {
 	public static final String UNIT_TYPE_4 = "4";
 	public static final String UNIT_TYPE_5 = "5"; 
 	
+	public int displayOrder() default 999;
 	public String vsql() default "";
 	public String vextends() default "";
 	public String unitType() default ""; 

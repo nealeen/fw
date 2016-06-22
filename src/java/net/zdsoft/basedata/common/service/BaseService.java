@@ -25,7 +25,7 @@ public interface BaseService<T, K extends Serializable> {
 
     public List<T> findAllByPage(Pagination page);
 
-    public void removeOne(K id);
+    public void delete(K id);
 
     public void remove(@SuppressWarnings("unchecked") K... ids);
     

@@ -15,11 +15,9 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import net.zdsoft.basedata.common.service.BaseService;
-import net.zdsoft.basedata.dao.BaseJapRepositoryDao;
 import net.zdsoft.basedata.dao.BaseJdbcDao;
-import net.zdsoft.basedata.entity.Unit;
+import net.zdsoft.framework.dao.BaseJapRepositoryDao;
 import net.zdsoft.framework.entity.BaseEntity;
-import net.zdsoft.framework.entity.Specifications;
 import net.zdsoft.framework.utils.CacheKeySyncUtils;
 import net.zdsoft.framework.utils.Pagination;
 import net.zdsoft.framework.utils.RedisInterface;
@@ -31,15 +29,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.alibaba.dubbo.config.annotation.Service;
-
 import redis.clients.jedis.Jedis;
+
+import com.alibaba.dubbo.config.annotation.Service;
 
 @Service
 public abstract class BaseServiceImpl<T extends BaseEntity, K extends Serializable> implements BaseService<T, K> {
 
 	protected abstract BaseJapRepositoryDao<T, K> getBaseJapRepositoryDao();
-	
+
 	@Resource
 	private BaseJdbcDao baseJdbcDao;
 
@@ -145,7 +143,7 @@ public abstract class BaseServiceImpl<T extends BaseEntity, K extends Serializab
 	}
 
 	@Override
-	public void removeOne(K id) {
+	public void delete(K id) {
 		Type type = getClass().getGenericSuperclass();
 		T t = ToolUtils.getGeneric(type);
 		if (t != null && StringUtils.isNotBlank(t.fetchCacheEntitName())) {

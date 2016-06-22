@@ -3,6 +3,7 @@ package net.zdsoft.basedata.dao;
 import java.util.List;
 
 import net.zdsoft.basedata.entity.Dept;
+import net.zdsoft.framework.dao.BaseJapRepositoryDao;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -20,5 +21,4 @@ public interface DeptDao extends BaseJapRepositoryDao<Dept, String> {
 
     @Query("select count(*) from Dept where isDeleted = 0 and unitId = ?1")
     Integer countByUnitId(String unitId);
-    
 }

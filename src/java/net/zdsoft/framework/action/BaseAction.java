@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
-
 public class BaseAction {
 
 	public LoginInfo getLoginInfo(HttpSession httpSession) {
@@ -51,10 +50,19 @@ public class BaseAction {
 		return Json.toJSONString(new ResultDto().setSuccess(false).setCode(code).setMsg(msg));
 	}
 
+	public String returnError(String code, String msg, String detailError) {
+		ResultDto rd = new ResultDto();
+		rd.setCode(code);
+		if(StringUtils.isNotBlank(detailError)){
+			rd.setMsg(msg + "<div class='hide'>" + detailError + "</div><br>点击查看<a href='javascript:void();' onclick='alert(1);)'>详细错误</a>");
+		}
+		return Json.toJSONString(new ResultDto().setSuccess(false).setCode(code).setMsg(msg));
+	}
+
 	public String returnError(String msg) {
 		return Json.toJSONString(new ResultDto().setSuccess(false).setCode("-1").setMsg(msg));
 	}
-	
+
 	public String returnError() {
 		return Json.toJSONString(new ResultDto().setSuccess(false).setCode("-1").setMsg("操作失败！"));
 	}
@@ -66,6 +74,7 @@ public class BaseAction {
 	public String returnSuccess(String msg) {
 		return Json.toJSONString(new ResultDto().setSuccess(true).setCode("00").setMsg(msg));
 	}
+
 	public String returnSuccess() {
 		return Json.toJSONString(new ResultDto().setSuccess(true).setCode("00").setMsg("操作成功！"));
 	}

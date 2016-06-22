@@ -16,7 +16,9 @@ import net.zdsoft.framework.entity.BaseEntity;
 @Table(name = "base_teacher")
 public class Teacher extends BaseEntity {
 	private static final long serialVersionUID = 1L;
+	@ColumnInfo(displayName="所在部门", nullable=false, vtype=ColumnInfo.VTYPE_SELECT, vsql="select id, dept_name from base_dept where is_deleted = 0 and unit_id = {unitId}")
 	private String deptId;
+	@ColumnInfo(hide=true, displayName="所在单位")
 	private String unitId;
 	@ColumnInfo(displayName = "编号", nullable = false, maxLength = 6)
 	private String teacherCode;
@@ -40,7 +42,7 @@ public class Teacher extends BaseEntity {
 	private Date graduateTime;
 	@ColumnInfo(displayName = "毕业学校")
 	private String graduateSchool;
-	@ColumnInfo(displayName = "主教科目")
+	@ColumnInfo(displayName = "毕业专业")
 	private String major;
 	@ColumnInfo(format = "yyyy-MM-dd", displayName = "参加工作时间", vtype = ColumnInfo.VTYPE_DATE)
 	private Date workDate;
@@ -66,6 +68,7 @@ public class Teacher extends BaseEntity {
 	private String cardNumber;
 	@ColumnInfo(displayName = "个人主页", vtype = ColumnInfo.VTYPE_URL)
 	private String homepage;
+	@ColumnInfo(displayName = "联系电话")
 	private String linkPhone;
 	@ColumnInfo(displayName = "联系地址")
 	private String linkAddress;
@@ -75,20 +78,22 @@ public class Teacher extends BaseEntity {
 	private String regionCode;
 	@ColumnInfo(displayName = "排序号", vtype = ColumnInfo.VTYPE_INT)
 	private Integer displayOrder;
-	private String chargeNumber;
+	@ColumnInfo(displayName = "卡类型")
 	private Integer chargeNumberType;
+	@ColumnInfo(displayName = "卡号")
+	private String chargeNumber;
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(updatable = false, nullable = false)
 	private Date creationTime;
 	@Temporal(TemporalType.TIMESTAMP)
-	@ColumnInfo(format = "YYYY-MM-DD HH:mm:ss", displayName = "修改时间", vtype = "date", hide=true)
+	@ColumnInfo(format = "YYYY-MM-DD HH:mm:ss", displayName = "修改时间", vtype = "date", disabled = true)
 	private Date modifyTime;
 	private Integer isDeleted;
 	private Integer eventSource;
 	private String dirId;
 	private String filePath;
 	private Integer section;
-	@ColumnInfo(displayName = "国家/地区", mcodeId = "DM-COUNTRY")
+	@ColumnInfo(displayName = "国家/地区", mcodeId = "DM-COUNTRY", vtype = ColumnInfo.VTYPE_SELECT)
 	private String country;
 	private String returnedChinese;
 	private String weaveType;
@@ -182,7 +187,6 @@ public class Teacher extends BaseEntity {
 	 * @deprecated 不要用这个
 	 */
 	private String mobilephone;
-	private String unitid;
 	private String otherDuty;
 	private Date dutyDate;
 	private String dutyLevel;
@@ -1258,14 +1262,6 @@ public class Teacher extends BaseEntity {
 	 */
 	public void setMobilephone(String mobilephone) {
 		this.mobilephone = mobilephone;
-	}
-
-	public String getUnitid() {
-		return unitid;
-	}
-
-	public void setUnitid(String unitid) {
-		this.unitid = unitid;
 	}
 
 	public String getOtherDuty() {

@@ -6,8 +6,11 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,6 +23,7 @@ import net.zdsoft.framework.annotation.ColumnInfo;
 import net.zdsoft.framework.entity.BaseEntity;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -43,13 +47,28 @@ public class ToolUtils {
 		return null;
 	}
 
+	public static <T> List<T> changePosition(List<T> list, T t, int upSize) {
+		if (upSize == 0) {
+			return list;
+		}
+		int index = list.indexOf(t);
+		if (index < 0) {
+			return list;
+		}
+		list.remove(t);
+		list.add(index + upSize < 0 ? 0 : index + upSize, t);
+		return list;
+	}
+
 	private static void initColumnProperties(Class<?> clazz) {
 		Class<?> superClass = clazz;
 		String key = superClass.getName();
 		List<String> infos = entityInfoMap.get(key);
 		if (infos == null) {
+			List<Object[]> infos2 = new ArrayList<Object[]>();
 			infos = new ArrayList<String>();
 			entityInfoMap.put(key, infos);
+
 			while (superClass != null) {
 				Set<String> set = new HashSet<String>();
 				Method[] methods = superClass.getDeclaredMethods();
@@ -63,25 +82,33 @@ public class ToolUtils {
 					}
 				}
 				Field[] fields = superClass.getDeclaredFields();
-				// try {
 				for (Field field : fields) {
 					String name = field.getName();
 					if (!set.contains(name.toLowerCase()))
 						continue;
-
 					ColumnInfo colInfo = field.getAnnotation(ColumnInfo.class);
 					if (colInfo == null)
 						continue;
-
-					infos.add(name);
-					// PropertyDescriptor pd = new
-					// PropertyDescriptor(field.getName(),
-					// clazz);
-					// Method getMethod =
-					// pd.getReadMethod();
-					// System.out.println(getMethod.getName());
+					infos2.add(new Object[] { name, colInfo.displayOrder() });
 				}
 				superClass = superClass.getSuperclass();
+			}
+
+			Collections.sort(infos2, new Comparator<Object[]>() {
+				@Override
+				public int compare(Object[] o1, Object[] o2) {
+					Object do1 = o1[1];
+					Object do2 = o2[1];
+					if (do1 == null)
+						return -1;
+					if (do2 == null)
+						return 1;
+					return ((Integer) do1) - ((Integer) do2);
+				}
+			});
+
+			for (Object[] os : infos2) {
+				infos.add((String) os[0]);
 			}
 		}
 	}
@@ -90,7 +117,7 @@ public class ToolUtils {
 		String key = clazz.getName();
 		Map<String, Map<String, Object>> infos = columnInfoMap.get(key);
 		if (infos == null) {
-			infos = new HashMap<String, Map<String, Object>>();
+			infos = new LinkedHashMap<String, Map<String, Object>>();
 			columnInfoMap.put(key, infos);
 			Class<?> superClass = clazz;
 			while (superClass != null) {
@@ -112,6 +139,7 @@ public class ToolUtils {
 						map.put("min", p.min());
 						map.put("regex", p.regex());
 						map.put("hide", p.hide());
+						map.put("displayOrder", p.displayOrder());
 						map.put("disabled", p.disabled());
 						infos.put(field.getName(), map);
 					}
@@ -124,10 +152,12 @@ public class ToolUtils {
 	public static Map<String, Map<String, Object>> getColumnInfos(Class<?> clazz) {
 		String key = clazz.getName();
 		Map<String, Map<String, Object>> infos = columnInfoMap.get(key);
-		if (infos == null) {
+		if (MapUtils.isEmpty(infos)) {
 			initColumnInfos(clazz);
 			infos = columnInfoMap.get(key);
 		}
+		Map<String, Map<String, Object>> ms = new LinkedHashMap<String, Map<String, Object>>();
+		ms.putAll(infos);
 		return infos;
 	}
 
@@ -138,7 +168,9 @@ public class ToolUtils {
 			initColumnProperties(clazz);
 			infos = entityInfoMap.get(key);
 		}
-		return infos;
+		List<String> ls = new ArrayList<String>();
+		ls.addAll(infos);
+		return ls;
 	}
 
 	public static Map<String, Object> getColumnInfo(Class<?> clazz, String columnName) {
@@ -181,7 +213,7 @@ public class ToolUtils {
 		String s = time + "" + m;
 		s = s + RandomStringUtils.randomNumeric(32 - s.length());
 		return s;
-//		return UUID.randomUUID().toString().replaceAll("-", "");
+		// return UUID.randomUUID().toString().replaceAll("-", "");
 	}
 
 	/**

@@ -3,35 +3,45 @@ package net.zdsoft.framework.dto;
 import com.wanpeng.basedata.remote.dto.BaseDto;
 
 public class ResultDto extends BaseDto {
-    private boolean success;
-    private String code;
-    private String msg;
-    
-    public boolean isSuccess() {
-        return success;
-    }
+	private boolean success;
+	private String code;
+	private String msg;
+	private String detailError;
 
-    public ResultDto setSuccess(boolean success) {
-        this.success = success;
-        return this;
-    }
+	public boolean isSuccess() {
+		return success;
+	}
 
-    public String getCode() {
-        return code;
-    }
+	public ResultDto setSuccess(boolean success) {
+		this.success = success;
+		return this;
+	}
 
-    public ResultDto setCode(String code) {
-        this.code = code;
-        return this;
-    }
+	public String getCode() {
+		return code;
+	}
 
-    public String getMsg() {
-        return msg;
-    }
+	public ResultDto setCode(String code) {
+		this.code = code;
+		return this;
+	}
 
-    public ResultDto setMsg(String msg) {
-        this.msg = msg;
-        return this;
-    }
+	public String getMsg() {
+		return msg;
+	}
+
+	public ResultDto setMsg(String msg) {
+		this.msg = msg;
+		return this;
+	}
+
+	public String getDetailError() {
+		return detailError;
+	}
+
+	public ResultDto setDetailError(String detailError) {
+		this.detailError = detailError;
+		return this;
+	}
 
 }

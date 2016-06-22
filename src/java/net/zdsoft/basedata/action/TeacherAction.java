@@ -79,7 +79,8 @@ public class TeacherAction extends BaseAction {
 		try {
 			teacherService.save(teacherO);
 		} catch (Exception e) {
-			throw new ControllerException(e.getMessage());
+			e.printStackTrace();
+			return returnError("", "保存失败，请联系管理员！", e.getMessage());
 		}
 		return returnSuccess("修改成功！");
 	}
@@ -93,7 +94,8 @@ public class TeacherAction extends BaseAction {
 			teacher.setId(ToolUtils.createUuid());
 			teacherService.save(teacher);
 		} catch (Exception e) {
-			throw new ControllerException(e.getMessage());
+			e.printStackTrace();
+			return returnError("", "保存失败，请联系管理员！", e.getMessage());
 		}
 
 		return returnSuccess("新增成功！");
@@ -104,14 +106,6 @@ public class TeacherAction extends BaseAction {
 	public String showTeacherDetail(@PathVariable String id, ModelMap map) {
 		TeacherDto dto = new TeacherDto();
 		Teacher teacher = teacherService.findOne(id);
-		String unitId = teacher.getUnitid();
-		if (StringUtils.isNotBlank(unitId)) {
-			dto.setUnit(unitService.findOne(unitId));
-		}
-		String deptId = teacher.getDeptId();
-		if (StringUtils.isNotBlank(deptId)) {
-			dto.setDept(deptService.findOne(deptId));
-		}
 		dto.setTeacher(teacher);
 		map.put("dto", dto);
 		map.put("fields", ToolUtils.getEntityFiledNames(Teacher.class));
@@ -122,18 +116,14 @@ public class TeacherAction extends BaseAction {
 
 	@RequestMapping("/teacher/add")
 	@ControllerInfo("新增教师")
-	public String showTeacherDetailAdd(ModelMap map, HttpSession httpSession) {
+	public String doAdd(ModelMap map, HttpSession httpSession) {
 		TeacherDto dto = new TeacherDto();
 		Teacher teacher = new Teacher();
 		LoginInfo loginInfo = getLoginInfo(httpSession);
 		String unitId = loginInfo.getUnitId();
-		if (StringUtils.isNotBlank(unitId)) {
-			dto.setUnit(unitService.findOne(unitId));
-		}
 		String deptId = loginInfo.getDeptId();
-		if (StringUtils.isNotBlank(deptId)) {
-			dto.setDept(deptService.findOne(deptId));
-		}
+		teacher.setUnitId(unitId);
+		teacher.setDeptId(deptId);
 		dto.setTeacher(teacher);
 		map.put("dto", dto);
 		map.put("fields", ToolUtils.getEntityFiledNames(Teacher.class));
@@ -246,7 +236,8 @@ public class TeacherAction extends BaseAction {
 	@ResponseBody
 	@RequestMapping("/unit/{unitId}/teachers")
 	@ControllerInfo("按单位显示教师列表")
-	public String teachers(@PathVariable String unitId, ModelMap map, HttpServletRequest request, HttpServletResponse response, HttpSession sesion) {
+	public String showTeachers(@PathVariable String unitId, ModelMap map, HttpServletRequest request, HttpServletResponse response,
+			HttpSession sesion) {
 		Pagination page = createPagination(request);
 		List<Teacher> teachers = teacherService.findAll(new Specifications<Teacher>().addEq("unitId", unitId).getSpecification(), page);
 		final Set<String> deptIds = new HashSet<String>();
@@ -283,8 +274,8 @@ public class TeacherAction extends BaseAction {
 		if (CollectionUtils.isNotEmpty(users)) {
 			throw new ControllerException("已经存在关联用户，不能删除！");
 		}
-		teacherService.removeOne(id);
-		return "删除成功！";
+		teacherService.delete(id);
+		return returnSuccess("删除成功！");
 	}
 
 	@RequestMapping("/teacher")
@@ -299,8 +290,8 @@ public class TeacherAction extends BaseAction {
 	@ResponseBody
 	@RequestMapping("/dept/{deptId}/teachers")
 	@ControllerInfo("检索部门内教师")
-	public String findByDeptId(@PathVariable String deptId, Integer sex, ModelMap map, HttpServletRequest request, HttpServletResponse response,
-			HttpSession session) {
+	public String showTeachersByDeptId(@PathVariable String deptId, Integer sex, ModelMap map, HttpServletRequest request,
+			HttpServletResponse response, HttpSession session) {
 
 		Pagination page = createPagination(request);
 		Specifications<Teacher> ss = new Specifications<Teacher>().addEq("deptId", deptId);

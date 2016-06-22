@@ -217,7 +217,7 @@ public class RedisUtils {
 		Set<String> ids = smembers(jedis, key);
 		if (CollectionUtils.isEmpty(ids)) {
 			ids = ri.queryData();
-			if (ids != null) {
+			if (CollectionUtils.isNotEmpty(ids)) {
 				sadd(jedis, key, ids.toArray(new String[0]));
 			}
 		}
@@ -689,7 +689,10 @@ public class RedisUtils {
 				else
 					list.add(KEY_PREFIX + s);
 			}
-			return jedis.del(list.toArray(new String[0]));
+			if (CollectionUtils.isNotEmpty(list))
+				return jedis.del(list.toArray(new String[0]));
+			else
+				return 0;
 		} catch (JedisException e) {
 			logger.error("jedis remove error", e);
 			success = false;

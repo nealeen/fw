@@ -3,8 +3,8 @@ package net.zdsoft.basedata.dao;
 import java.util.List;
 
 import net.zdsoft.basedata.entity.McodeDetail;
+import net.zdsoft.framework.dao.BaseJapRepositoryDao;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface McodeDetailDao extends BaseJapRepositoryDao<McodeDetail, String> {

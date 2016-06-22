@@ -10,7 +10,6 @@ import javax.persistence.Transient;
 
 import net.zdsoft.framework.annotation.ColumnInfo;
 import net.zdsoft.framework.entity.BaseEntity;
-import net.zdsoft.framework.entity.Constant;
 
 @Entity
 @Table(name = "base_dept")
@@ -19,22 +18,24 @@ public class Dept extends BaseEntity {
 
 	@ColumnInfo(displayName = "单位ID", hide = true)
 	private String unitId;
-	@ColumnInfo(displayName = "名称")
+	@ColumnInfo(displayName = "名称", nullable = false, displayOrder = 1)
 	private String deptName;
-	@ColumnInfo(displayName = "上级部门", vtype = ColumnInfo.VTYPE_SELECT, vsql = "select '00000000000000000000000000000000', '一级部门' from dual union select id, dept_name from base_dept where is_deleted = '0' and unit_id = {unitId} and id <> {id}")
-	private String parentId;
-	@ColumnInfo(displayName = "编号")
+	@ColumnInfo(displayName = "编号", displayOrder = 2)
 	private String deptCode;
+	@ColumnInfo(displayName = "上级部门", displayOrder = 3, nullable = false, vtype = ColumnInfo.VTYPE_SELECT, vsql = "select '00000000000000000000000000000000', '一级部门' from dual union select id, dept_name from base_dept where is_deleted = '0' and unit_id = {unitId} and id <> {id}")
+	private String parentId;
+	@ColumnInfo(displayName = "类型", displayOrder = 4, vtype = ColumnInfo.VTYPE_SELECT, mcodeId = "DM-JYBZ")
+	private Integer deptType;
+	@ColumnInfo(displayName = "负责人", displayOrder = 5, vtype = ColumnInfo.VTYPE_SELECT, vsql = "select id, teacher_name from base_teacher where is_deleted = 0 and unit_id = {unitId}")
+	private String teacherId;
+	@ColumnInfo(displayName = "分管领导", displayOrder = 6, vtype = ColumnInfo.VTYPE_SELECT, vsql = "select id, teacher_name from base_teacher where is_deleted = 0 and unit_id = {unitId}")
+	private String leaderId;
+	@ColumnInfo(displayName = "办公电话", displayOrder = 7)
+	private String deptTel;
+	@ColumnInfo(displayName = "排序号", vtype = ColumnInfo.VTYPE_INT, displayOrder = 8)
+	private Integer displayOrder;
 	@ColumnInfo(displayName = "备注")
 	private String remark;
-	@ColumnInfo(displayName = "办公电话")
-	private String deptTel;
-	@ColumnInfo(displayName = "类型", vtype = ColumnInfo.VTYPE_SELECT, mcodeId = "DM-BMLX")
-	private Integer deptType;
-	@ColumnInfo(displayName = "负责人")
-	private String teacherId;
-	@ColumnInfo(displayName = "排序号", vtype = ColumnInfo.VTYPE_INT)
-	private Integer displayOrder;
 	private Integer isDefault;
 	@ColumnInfo(displayName = "创建时间", disabled = true)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -42,14 +43,18 @@ public class Dept extends BaseEntity {
 	@Temporal(TemporalType.TIMESTAMP)
 	@ColumnInfo(displayName = "修改时间", disabled = true)
 	private Date modifyTime;
-	@ColumnInfo(displayName = "是否删除", vtype = ColumnInfo.VTYPE_RADIO, mcodeId = "DM-BOOLEAN")
+	@ColumnInfo(displayName = "是否删除", hide = true, vtype = ColumnInfo.VTYPE_RADIO, mcodeId = "DM-BOOLEAN")
 	private Integer isDeleted;
 	private Integer eventSource;
+	@ColumnInfo(displayName = "部门状态")
 	private Integer deptState;
-	private String leaderId;
+	@ColumnInfo(displayName = "所属学院")
 	private String instituteId;
+	@ColumnInfo(displayName = "所属校区")
 	private String areaId;
+	@ColumnInfo(displayName = "分管校长", displayOrder = 6, vtype = ColumnInfo.VTYPE_SELECT, vsql = "select id, teacher_name from base_teacher where is_deleted = 0 and unit_id = {unitId}")
 	private String deputyHeadId;
+	@ColumnInfo(displayName = "部门简称")
 	private String deptShortName;
 	@Transient
 	@ColumnInfo(disabled = true)

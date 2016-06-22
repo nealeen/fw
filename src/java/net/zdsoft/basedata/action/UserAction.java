@@ -38,7 +38,7 @@ public class UserAction extends BaseAction {
         if (teacher != null) {
             throw new RuntimeException("存在相关教师，不能删除！");
         }
-        userService.removeOne(id);
+        userService.delete(id);
         return "删除成功！";
     }
 

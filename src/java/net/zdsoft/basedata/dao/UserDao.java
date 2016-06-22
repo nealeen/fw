@@ -3,6 +3,7 @@ package net.zdsoft.basedata.dao;
 import java.util.List;
 
 import net.zdsoft.basedata.entity.User;
+import net.zdsoft.framework.dao.BaseJapRepositoryDao;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
